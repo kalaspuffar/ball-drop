@@ -1,0 +1,22 @@
+{
+  "name": "ball-drop",
+  "version": "0.0.1",
+  "description": "Small example project for new years where we drop the ball according to time.",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kalaspuffar/ball-drop.git"
+  },
+  "author": "Daniel Persson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kalaspuffar/ball-drop/issues"
+  },
+  "homepage": "https://github.com/kalaspuffar/ball-drop#readme",
+  "devDependencies": {
+    "live-server": "^1.2.1"
+  }
+}

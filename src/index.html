@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+            }
+            
+            body {
+                width: 100vw;
+                height: 100vh;
+            }
+
+            #dayball {
+                position: absolute;
+                left: 30px;
+            }
+            #hourball {
+                position: absolute;
+                left: 150px;
+            }
+            #minuteball {
+                position: absolute;
+                left: 270px;
+            }
+            #secondball {
+                position: absolute;
+                left: 390px;
+            }
+
+            #dayball img, #hourball img, #minuteball img, #secondball img {
+                position: relative;
+                top: 0;
+                left: 0;
+                background: transparent;
+                width: 100px;
+                height: 100px;
+                z-index: 10;
+            }
+
+            #dayball span, #hourball span, #minuteball span, #secondball span {
+                position: relative;
+                display: block;
+                top: -70px;
+                left: -50px;
+                font-size: 25pt;
+                width: 200px;
+                text-align: center;
+                color: purple;
+                z-index: 20;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="dayball">
+            <img src="disco-ball.png"/>
+            <span></span>
+        </div>
+        <div id="hourball">
+            <img src="disco-ball.png"/>
+            <span></span>
+        </div>
+        <div id="minuteball">
+            <img src="disco-ball.png"/>
+            <span></span>
+        </div>
+        <div id="secondball">
+            <img src="disco-ball.png"/>
+            <span></span>
+        </div>
+
+        <script>
+            const displayTimeElement = 
+                document.getElementById('displayTime');
+            const dayBallElement = 
+                document.getElementById('dayball');
+            const hourBallElement = 
+                document.getElementById('hourball');
+            const minuteBallElement = 
+                document.getElementById('minuteball');
+            const secondBallElement = 
+                document.getElementById('secondball');
+            const dayLabelElement = 
+                document.querySelector('#dayball span');
+            const hourLabelElement = 
+                document.querySelector('#hourball span');
+            const minuteLabelElement = 
+                document.querySelector('#minuteball span');
+            const secondLabelElement = 
+                document.querySelector('#secondball span');
+            const startTime = new Date().getTime();
+            const newYearsTime = new Date("2019-01-01 00:00").getTime();
+            const timeUntilDrop = newYearsTime - startTime;
+
+            const daysUntilDrop = 31;
+            const hoursUntilDrop = 24;
+            const minutesUntilDrop = 60;
+            const secondsUntilDrop = 60;
+
+            const ballHeight = 100;
+            const viewportHeight = document.body.offsetHeight - ballHeight;
+
+            function daysValue(timeLeft) {
+                return parseInt(timeLeft / 1000 / 3600 / 24);
+            }
+
+            function hoursValue(timeLeft, daysLeft) {
+                const milliDays = daysLeft * 1000 * 3600 * 24;
+                return parseInt((timeLeft - milliDays) / 1000 / 3600);
+            }
+
+            function minutesValue(timeLeft, daysLeft, hoursLeft) {
+                const milliDays = daysLeft * 1000 * 3600 * 24;
+                const milliHours = hoursLeft * 1000 * 3600 + milliDays;
+                return parseInt((timeLeft - milliHours) / 1000 / 60);
+            }
+
+            function secondsValue(timeLeft, daysLeft, hoursLeft, minutesLeft) {
+                const milliDays = daysLeft * 1000 * 3600 * 24;
+                const milliHours = hoursLeft * 1000 * 3600 + milliDays;
+                const milliMinutes = (minutesLeft * 1000 * 60) + milliHours;
+                return parseInt((timeLeft - milliMinutes)  / 1000);
+            }
+
+            function percentageUntilDropped(timeLeft, timeUntilDrop) {
+                const percentageUntilDropped = timeLeft / timeUntilDrop;
+                var pixelsLeftUntilDropped = percentageUntilDropped * viewportHeight;
+                if(pixelsLeftUntilDropped < 0 || timeUntilDrop < 0) {
+                    pixelsLeftUntilDropped = 0;
+                }
+                return pixelsLeftUntilDropped;
+            }
+
+            setInterval(function() {
+                const currentTime = new Date().getTime();            
+                const timeLeft = newYearsTime - currentTime;
+                const daysLeft = daysValue(timeLeft);
+                const hoursLeft = hoursValue(timeLeft, daysLeft);
+                const minutesLeft = minutesValue(timeLeft, daysLeft, hoursLeft);
+                const secondsLeft = secondsValue(timeLeft, daysLeft, hoursLeft, minutesLeft);
+
+                const pixelsLeftDays = percentageUntilDropped(daysLeft, daysUntilDrop);
+                const pixelsLeftHours = percentageUntilDropped(hoursLeft, hoursUntilDrop)
+                const pixelsLeftMinutes = percentageUntilDropped(minutesLeft, minutesUntilDrop);
+                const pixelsLeftSeconds = percentageUntilDropped(secondsLeft, secondsUntilDrop);
+
+                dayBallElement.style.bottom = pixelsLeftDays + 'px';
+                hourBallElement.style.bottom = pixelsLeftHours + 'px';
+                minuteBallElement.style.bottom = pixelsLeftMinutes + 'px';
+                secondBallElement.style.bottom = pixelsLeftSeconds + 'px';
+
+                dayLabelElement.innerHTML = daysLeft + 'D';
+                hourLabelElement.innerHTML = hoursLeft + 'H';
+                minuteLabelElement.innerHTML = minutesLeft + 'M';
+                secondLabelElement.innerHTML = secondsLeft + 'S';
+            }, 10);
+        </script>
+    </body>
+</html>
